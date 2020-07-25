@@ -1,5 +1,5 @@
-calendar/vendor
 DB/*
 logs/*
 node_modules
+vendor
 _config.json
