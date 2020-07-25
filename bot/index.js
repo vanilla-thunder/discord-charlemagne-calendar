@@ -3,7 +3,25 @@ const fs = require('fs'),
 	client = new Discord.Client(),
 	axios = require('axios');
 
-if (!fs.existsSync('./../_config.json')) 
+
+// generating or loading config
+if(process.env.discordToken && process.env.syncEndpoint && process.env.deletingEndpoint && process.env.customToken && process.env.debug )
+{
+	const cfg = {
+		"debug" : process.env.debug,
+		"discordToken": process.env.discordToken,
+		"customToken": process.env.customToken,
+		"syncEndpoint": process.env.syncEndpoint, 
+		"deletingEndpoint": process.env.deletingEndpoint
+	};
+	console.log("loading config from env vars");
+}
+else if (fs.existsSync('./../_config.json')) 
+{
+	const cfg = require('./../_config.json');	
+	console.log("loading config from file");
+}
+else 
 {
 	console.log("");
 	console.error("\x1b[31m", "config file does not exist, plese rename _config.json.dist to _config.json and change the configuration");
@@ -11,7 +29,7 @@ if (!fs.existsSync('./../_config.json'))
 	process.exit(1);
 }
 
-const cfg = require('./../_config.json');
+
 
 var syncEvent = (data) => {
 	if(cfg.debug) console.log("sending event data");
@@ -20,7 +38,7 @@ var syncEvent = (data) => {
 		.then((res) => { if(cfg.debug) console.log("event submitted"); })
 		.catch((error) => { 
 			console.error(error) ;
-			fs.writeFileSync("./../DB/syncError.json", error);
+			if(cfg.debug) fs.writeFileSync("./../DB/syncError.json", error);
 		});
 };
 
@@ -28,9 +46,10 @@ var deleteEvent = (data) => {
 	if(cfg.debug) console.log("deleting event " + data);
 	axios.post(cfg.deletingEndpoint + '?token=' + cfg.customToken, {event: data})
 		.then((res) => { if(cfg.debug) console.log("event deleted"); })
-		.catch((error) => { console.error(error);
-			fs.writeFileSync("./../DB/deleteError.json", error);
-			});
+		.catch((error) => { 
+			console.error(error);
+			if(cfg.debug)fs.writeFileSync("./../DB/deleteError.json", error);
+		});
 };
 
 client.once('ready', () => {
