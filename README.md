@@ -18,18 +18,18 @@ in theory can be hosted on heroku, too, but i did not try it.
 + make sure 'DB' and 'logs' are writable
  
 # Configuration
-+ debug: enables debugging output for discord bot (true/false)
-+ discordToken": your discord api token
-+ webPassword": password for accessing web interface
-+ customToken": custom token bot uses to submit data to the calendar web interface
-+ loadingEndpoint: URL for loading stored calendar events (your web-interface URL + "/loadEvents")
-+ syncEndpoint": URL for creating/updating calendar events (your web-interface URL + "/syncEvent") 
-+ deletingEndpoint: URL for deleting calendar events (your web-interface URL + "/deleteEvent")
++ **debug**: enables debugging output for discord bot (true/false)
++ **discordToken**: your discord api token
++ **webPassword**: password for accessing web interface
++ **customToken**: custom token bot uses to submit data to the calendar web interface
++ **loadingEndpoint**: URL for loading stored calendar events (your web-interface URL + "/loadEvents")
++ **syncEndpoint**: URL for creating/updating calendar events (your web-interface URL + "/syncEvent") 
++ **deletingEndpoint**: URL for deleting calendar events (your web-interface URL + "/deleteEvent")
  
 # Known "Problems"
-Only manually deleted events will be deleted from web interface.
-Charlemagne's events have limited life time and are getting auto-deleted after a certain amount of time.
-Those "finished" events stay in web interface.
+Only manually deleted events will be deleted from web interface.  
+Charlemagne's events have limited life time and are getting auto-deleted after a certain amount of time.  
+Those "finished" events stay in web interface.  
 I probably will add some automation for deleting old events in web interface.
 
 # GDPR and Shit
