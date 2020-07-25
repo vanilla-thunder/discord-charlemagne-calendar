@@ -3,11 +3,12 @@ const fs = require('fs'),
 	client = new Discord.Client(),
 	axios = require('axios');
 
+var cfg = {};
 
 // generating or loading config
 if(process.env.discordToken && process.env.syncEndpoint && process.env.deletingEndpoint && process.env.customToken && process.env.debug )
 {
-	const cfg = {
+	cfg = {
 		"debug" : process.env.debug,
 		"discordToken": process.env.discordToken,
 		"customToken": process.env.customToken,
@@ -18,7 +19,7 @@ if(process.env.discordToken && process.env.syncEndpoint && process.env.deletingE
 }
 else if (fs.existsSync('./_config.json')) 
 {
-	const cfg = require('./_config.json');	
+	cfg = require('./_config.json');	
 	console.log("loading config from file");
 }
 else 
@@ -28,7 +29,6 @@ else
 	console.log("\x1b[0m");
 	process.exit(1);
 }
-
 
 
 var syncEvent = (data) => {
