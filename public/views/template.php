@@ -2,12 +2,56 @@
 <head>
     <title>Raids & Events of Teh Fallen Örder</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css"/>
-    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css"/>
-    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.25, maximum-scale=2.0"/>
+    <link rel="stylesheet" href="src/materialize.min.css"/>
+    <link rel="stylesheet" type="text/css" href="src/tui-calendar.css"/>
+    <link rel="stylesheet" type="text/css" href="src/tui-date-picker.css"/>
+    <link rel="stylesheet" type="text/css" href="src/tui-time-picker.css"/>
+    <style>
+    /* fallback */
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(src/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -moz-font-feature-settings: 'liga';
+  -moz-osx-font-smoothing: grayscale;
+}
+
+    	body { zoom: 150%; }
+    	.spin {
+    		animation-name: spin;
+  			animation-duration: 500ms;
+  			animation-iteration-count: 1;
+  			animation-timing-function: linear; 
+    	}
+    	@-moz-keyframes spin {
+    	from { -moz-transform: rotate(0deg); }
+    		to { -moz-transform: rotate(360deg); }
+		}
+		@-webkit-keyframes spin {
+		    from { -webkit-transform: rotate(0deg); }
+	    	to { -webkit-transform: rotate(360deg); }
+		}
+		@keyframes spin {
+	    	from {transform:rotate(0deg);}
+    		to {transform:rotate(360deg);}
+		}
+    </style>
 </head>
 <body ng-controller="ctrl">
 <?php if(!$auth) {	?>
@@ -28,7 +72,7 @@
     <div class="nav-wrapper">
         <a href="#" class="brand-logo">&nbsp;&nbsp;Raids & Events</a>
         <ul id="nav-mobile" class="right">
-            <li><a href="#" ng-click="loadEvents();"><i class="material-icons">refresh</i></a></li>
+            <li><a href="#" ng-click="loadEvents();"><i id="refresh" class="material-icons" ng-class="{'spin':progress>0}">refresh</i></a></li>
             <li><a href="#" ng-click="calendar.today();">Today</a></li>
             <li><a href="#" ng-click="calendar.prev();"><i class="material-icons">keyboard_arrow_left</i></a></li>
             <li><a href="#" ng-click="calendar.next();"><i class="material-icons">keyboard_arrow_right</i></a></li>
@@ -37,18 +81,19 @@
 </nav>
 <div id="calendar" style="height: 90%;"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.9/angular.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
-<script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>
-<script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
-<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
-<script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
+<script src="src/materialize.min.js"></script>
+<script src="src/angular.min.js"></script>
+<script src="src/moment.min.js"></script>
+<script src="src/tui-code-snippet.min.js"></script>
+<script src="src/tui-time-picker.min.js"></script>
+<script src="src/tui-date-picker.min.js"></script>
+<script src="src/tui-calendar.js"></script>
 <script>
     var app = angular.module('app', []);
-    app.controller('ctrl', function ($scope, $http)
+    app.controller('ctrl', function ($scope, $http, $timeout)
        {
-           $scope.calendar = new tui.Calendar('#calendar', {
+       		$scope.progress = 0;
+            $scope.calendar = new tui.Calendar('#calendar', {
                isReadOnly: true,
                defaultView: 'month',
                taskView: false,
@@ -84,12 +129,16 @@
                }
            });
 
-
            $scope.loadEvents = function ()
            {
+           	$scope.progress++;
+           	$timeout(function() { $scope.progress--;}, 500);
                $http.get("<?php print $loadingEndpoint ?? ''; ?>")
                     .then(function (res)
                     {
+                    	//$.timeout(function(){ $scope.progress--;}, 500);
+                    	
+                        
                         if (res.status == 200)
                         {
                             console.log("loaded events", res.data);
@@ -98,6 +147,7 @@
                             $scope.calendar.render();
                         }
                         else console.log("dat war nix", res);
+                        
                     });
            };
            $scope.loadEvents();

@@ -50,9 +50,9 @@ Flight::route('/syncEvent', function() {
 
 	$activity = $payload[0]["value"];
     $date = date_create_from_format('H:i T d/m',$payload[1]["value"]);
-    $start = date_format($date,"Y-m-d\tH:i:s");
+    $start = date_format($date,"Y-m-d H:i:s");
     date_add($date,date_interval_create_from_date_string('1 hour'));
-    $end = date_format($date,"Y-m-d\tH:i:s");
+    $end = date_format($date,"Y-m-d H:i:s");
 	$id = $payload[2]["value"];
     $description = $payload[3]["value"];
     $guardians = explode(", ",$payload[4]["value"]);
@@ -69,7 +69,7 @@ Flight::route('/syncEvent', function() {
         $post->location = $activity;
         $post->body = $description;
         $post->start = $start;
-        $post->end = $end;
+        //$post->end = $end;
         $post->category = 'time';
         $post->attendees = $guardians;
         $post->isReadOnly = true;
@@ -87,7 +87,7 @@ Flight::route('/syncEvent', function() {
             'location' => $activity,
             'body' => $description,
             'start' => $start,
-            'end' => $end,
+            //'end' => $end,
             'category' => 'time',
             'attendees' => $guardians,
             'isReadOnly' => true
