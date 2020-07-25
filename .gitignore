@@ -1,0 +1,4 @@
+calendar/vendor
+bot/node_modules
+DB/*
+_config.json
