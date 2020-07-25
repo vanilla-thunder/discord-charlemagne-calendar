@@ -5,7 +5,7 @@ can be hosted on heroku, but also everywhere else.
 
 ## Installation
 + `npm install`
-+ copy `_config.json.dist`, renate to `_config.json` and change params
++ copy `_config.json.dist`, rename to `_config.json` and change params
 + invite your bot to your server
 
 # Calendar Web Interface (PHP)
