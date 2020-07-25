@@ -4,9 +4,9 @@
   "description": "",
   "keywords": [],
   "author": "Marat B",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node app.js"
   },
   "dependencies": {
     "axios": "^0.19.2",

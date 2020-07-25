@@ -16,9 +16,9 @@ if(process.env.discordToken && process.env.syncEndpoint && process.env.deletingE
 	};
 	console.log("loading config from env vars");
 }
-else if (fs.existsSync('./../_config.json')) 
+else if (fs.existsSync('./_config.json')) 
 {
-	const cfg = require('./../_config.json');	
+	const cfg = require('./_config.json');	
 	console.log("loading config from file");
 }
 else 
@@ -38,7 +38,7 @@ var syncEvent = (data) => {
 		.then((res) => { if(cfg.debug) console.log("event submitted"); })
 		.catch((error) => { 
 			console.error(error) ;
-			if(cfg.debug) fs.writeFileSync("./../DB/syncError.json", error);
+			if(cfg.debug) fs.writeFileSync("./logs/syncError.json", error);
 		});
 };
 
@@ -48,7 +48,7 @@ var deleteEvent = (data) => {
 		.then((res) => { if(cfg.debug) console.log("event deleted"); })
 		.catch((error) => { 
 			console.error(error);
-			if(cfg.debug)fs.writeFileSync("./../DB/deleteError.json", error);
+			if(cfg.debug)fs.writeFileSync("./logs/deleteError.json", error);
 		});
 };
 

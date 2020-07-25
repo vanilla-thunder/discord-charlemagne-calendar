@@ -1,4 +1,5 @@
 calendar/vendor
-bot/node_modules
 DB/*
+logs/*
+node_modules
 _config.json
