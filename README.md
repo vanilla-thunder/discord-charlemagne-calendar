@@ -1,9 +1,9 @@
-# Discord Bot (NodeJS)
+# Charlemagne Event Calendar Discord Bot (NodeJS)
 can be hosted on heroku, but also everywhere else.
 
-![web interface demo](screenshot.jpg "web interfac edemo")
+![web interface demo](https://raw.githubusercontent.com/vanilla-thunder/discord-charlemagne-calendar/master/screenshop.jpg)
 
-## installation
+## Installation
 + `npm install`
 + copy `_config.json.dist`, renate to `_config.json` and change params
 + invite your bot to your server
@@ -11,7 +11,7 @@ can be hosted on heroku, but also everywhere else.
 # Calendar Web Interface (PHP)
 in theory can be hosted on heroku, too, but i did not try it.
 
-## installation
+## Installation
 + `composer install`
 + if you host web interface separately from the bot, make sure you have same `_config.json`
 + point your web root to the `public /` directory
