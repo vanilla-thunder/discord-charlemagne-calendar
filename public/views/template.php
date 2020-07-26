@@ -126,7 +126,7 @@
                 {
                     var html = '';
                     // alternative joins
-                    if(typeof schedule.raw !== "undefined" && schedule.raw && typeof schedule.raw.alternatives !== "undefined" && schedule.raw.alternatives.length > 0) html += '<span class="amber-text"><i class="material-icons tiny">perm_identity</i> Alternatives: ' + schedule.raw.alternatives.join(', ') + '</span><br/>';
+                    if(typeof schedule.raw !== "undefined" && schedule.raw && typeof schedule.raw.alternatives !== "undefined" && schedule.raw.alternatives.length > 0) html += '<span class=""><i class="material-icons tiny">perm_identity</i> Alternatives: ' + schedule.raw.alternatives.join(', ') + '</span><br/>';
                     // join id
                     html += '<span class="green-text"><i class="material-icons tiny">person_add</i> !lfg join ' + schedule.id + '</span><br/>';
                     // 6 people joined? might be full
