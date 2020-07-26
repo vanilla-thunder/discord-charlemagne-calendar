@@ -44,11 +44,15 @@ const isConfigReloadMessage = (message) => {
 
 const isEventMessage = (message) => {
 	// event messages have no content but an embed message with 5 or 6 fields
-	return (isCharlemagne(message.author) && message.content === "" && message.embeds.length > 0 && message.embeds[0].fields.length > 5);
+	//console.log("is charlemagne?", isCharlemagne(message.author.id));
+	//console.log("no content?", (message.content === ""));
+	//console.log("message embeds length", message.embeds.length);
+	//if(message.embeds.length > 0) console.log("message embeds[0] fields length", message.embeds[0].fields.length);
+	return (isCharlemagne(message.author.id) && message.content === "" && message.embeds.length > 0 && message.embeds[0].fields.length > 4);
 };
 
 // when cancelling events charlemagne posts message "Successfully cancelled LFG Post: 1234 - activity name"
-const wasCancelled = (message) => { return (isCharlemagne(message.author) && message.content.indexOf(cancelMessage) === 0) };
+const wasCancelled = (message) => { return (isCharlemagne(message.author.id) && message.content.indexOf(cancelMessage) === 0) };
 
 // functrions for transferring event data
 const syncEvent = (data) => {
