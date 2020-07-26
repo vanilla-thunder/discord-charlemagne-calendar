@@ -62,7 +62,7 @@ const syncEvent = (data) => {
 		 .then((res) => { if (cfg.debug) console.log("event submitted"); })
 		 .catch((error) => {
 			 console.error(error);
-			 if (cfg.debug) fs.writeFileSync("../logs/syncError.json", error);
+			 //if (cfg.debug) fs.writeFileSync("./logs/syncError.json", error);
 		 });
 };
 
@@ -72,7 +72,7 @@ const deleteEvent = (data) => {
 		 .then((res) => { if (cfg.debug) console.log("event deleted"); })
 		 .catch((error) => {
 			 console.error(error);
-			 if (cfg.debug) fs.writeFileSync("../logs/deleteError.json", error);
+			 //if (cfg.debug) fs.writeFileSync("./logs/deleteError.json", error);
 		 });
 };
 

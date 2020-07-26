@@ -61,7 +61,7 @@ Flight::route('/syncEvent', function() {
 	$id = $payload[2]["value"];
     $description = $payload[3]["value"];
     $guardians = explode(", ",$payload[4]["value"]);
-    if(count($payload) == 6) foreach ( explode(", ",$payload[5]["value"]) as $alt) $guardians[] = "(".$alt.")";
+    if(count($payload) == 6) $alternatives = explode(", ",$payload[5]["value"]);
         
     $database = new \JamesMoss\Flywheel\Config(dirname(__FILE__) . '/../DB');
     $repo = new \JamesMoss\Flywheel\Repository('events', $database);
@@ -77,6 +77,7 @@ Flight::route('/syncEvent', function() {
         //$post->end = $end;
         $post->category = 'time';
         $post->attendees = $guardians;
+        $post->raw = ["alternatives" => $alternatives ?? []];
         $post->isReadOnly = true;
 
         $repo->update($post);
@@ -95,6 +96,7 @@ Flight::route('/syncEvent', function() {
             //'end' => $end,
             'category' => 'time',
             'attendees' => $guardians,
+            'raw' => [ 'alternatives' => $alternatives ?? []],
             'isReadOnly' => true
         ));
         $post->setId($id);
