@@ -9,7 +9,7 @@ var cfg = {};
 if(process.env.discordToken && process.env.syncEndpoint && process.env.deletingEndpoint && process.env.customToken && process.env.debug )
 {
 	cfg = {
-		"debug" : ( process.env.debug == "true" ? true : flase),
+		"debug" : ( process.env.debug == "true" ? true : false),
 		"discordToken": process.env.discordToken,
 		"customToken": process.env.customToken,
 		"syncEndpoint": process.env.syncEndpoint, 
@@ -25,7 +25,7 @@ else if (fs.existsSync('./_config.json'))
 else 
 {
 	console.log("");
-	console.error("\x1b[31m", "config file does not exist, plese rename _config.json.dist to _config.json and change the configuration");
+	console.error("\x1b[31m", "config file does not exist, please rename _config.json.dist to _config.json and change the configuration");
 	console.log("\x1b[0m");
 	process.exit(1);
 }
