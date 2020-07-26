@@ -90,7 +90,7 @@
 <script src="src/tui-calendar.js"></script>
 <script>
     var app = angular.module('app', []);
-    app.controller('ctrl', function ($scope, $http, $timeout)
+    app.controller('ctrl', function ($scope, $http, $timeout, $interval)
     {
         $scope.progress = 0;
         $scope.calendar = new tui.Calendar('#calendar', {
@@ -126,7 +126,7 @@
                 {
                     var html = '';
                     // alternative joins
-                    if(typeof schedule.raw.alternatives !== "undefined" && schedule.raw.alternatives.length > 0) html += '<span class="amber-text"><i class="material-icons tiny">perm_identity</i> Alternatives: ' + schedule.raw.alternatives.join(', ') + '</span><br/>';
+                    if(typeof schedule.raw !== "undefined" && schedule.raw && typeof schedule.raw.alternatives !== "undefined" && schedule.raw.alternatives.length > 0) html += '<span class="amber-text"><i class="material-icons tiny">perm_identity</i> Alternatives: ' + schedule.raw.alternatives.join(', ') + '</span><br/>';
                     // join id
                     html += '<span class="green-text"><i class="material-icons tiny">person_add</i> !lfg join ' + schedule.id + '</span><br/>';
                     // 6 people joined? might be full
@@ -158,6 +158,10 @@
                  });
         };
         $scope.loadEvents();
+
+        $scope.keepAlive = $interval(function() {
+            $scope.loadEvents();
+        }, 180000);
     });
 </script>
 <?php } ?>
