@@ -4,6 +4,9 @@
   "description": "",
   "keywords": [],
   "author": "Marat B",
+  "contributors": [
+    "TMUniversal <me@tmuniversal.eu>"
+  ],
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js"
