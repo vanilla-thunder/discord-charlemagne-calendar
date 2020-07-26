@@ -62,7 +62,7 @@ client.login(cfg.discordToken);
 client.on('messageUpdate', (oldMessage, newMessage) => {
 	
 	// we only want to monitor chat messages from charlemagne
-	$charlemagne = (newMessage.author.id === "720380093062578176" && newMessage.author.bot);
+	$charlemagne = (newMessage.author.id === "296023718839451649" && newMessage.author.bot);
 	
 	// event messages have no content but an embed message with 5 or 6 fields
 	$eventMessage = (newMessage.content === "" && newMessage.embeds.length > 0 && newMessage.embeds[0].fields.length >= 5);
@@ -74,7 +74,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 client.on('message', (newMessage) => {
 	
 	// we only want to monitor chat messages from charlemagne
-	$charlemagne = (newMessage.author.id === "720380093062578176" && newMessage.author.bot);
+	$charlemagne = (newMessage.author.id === "296023718839451649" && newMessage.author.bot);
 	
 	// on deleting events charlemagne posts message "Successfully cancelled LFG Post: 1234 - activity name"
 	$deleteMessage = (newMessage.content.indexOf('Successfully cancelled LFG Post') === 0);
