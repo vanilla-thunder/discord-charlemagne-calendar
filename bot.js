@@ -83,17 +83,19 @@ const init = async () => {
 	// charlemagne always updates the event messages, therefore we only need to watch messageUpdate events for new and updated events
 	client.on('messageUpdate', (oldMessage, newMessage) => {
 
-		if (isEvent(newMessage)) syncEvent(newMessage.embeds[0].fields);
+		if (isEvent(newMessage)) return syncEvent(newMessage.embeds[0].fields);
 	});
 
 	// on deleting events charlemagne posts message "Successfully cancelled LFG Post: 1234 - activity name"
 	client.on('message', (newMessage) => {
 
-		if (wasCanceled(newMessage)) deleteEvent(newMessage.content.substr(cancelMessage.length));
+		if (wasCanceled(newMessage)) return deleteEvent(newMessage.content.substr(cancelMessage.length));
 	});
 
+	// charlemagne events are cancelled when their associated chat message is deleted
 	client.on('messageDelete', (message) => {
-
+	
+		if (isEvent(message)) return deleteEvent(message.content.substr(cancelMessage.length))
 	});
 
 	process.on('SIGTERM', () => client.destroy())
