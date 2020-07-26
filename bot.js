@@ -9,7 +9,7 @@ var cfg = {};
 if(process.env.discordToken && process.env.syncEndpoint && process.env.deletingEndpoint && process.env.customToken && process.env.debug )
 {
 	cfg = {
-		"debug" : ( process.env.debug == "true" ? true : flase),
+		"debug" : ( process.env.debug == "true" ? true : false),
 		"discordToken": process.env.discordToken,
 		"customToken": process.env.customToken,
 		"syncEndpoint": process.env.syncEndpoint, 
