@@ -2,6 +2,11 @@
 require '../vendor/autoload.php';
 session_start();
 
+ini_set('error_reporting',24567);
+//ini_set('display_errors',1);
+ini_set('log_errors',1);
+ini_set('error_log',dirname(__FILE__).'/../logs/error.log');
+
 // loading config.json
 $config = json_decode(file_get_contents(dirname(__FILE__)."/../_config.json"),false);
 Flight::set("config",$config);
