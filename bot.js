@@ -62,17 +62,18 @@ const syncEvent = (data) => {
 		 .then((res) => { if (cfg.debug) console.log("event submitted"); })
 		 .catch((error) => {
 			 console.error(error);
-			 //if (cfg.debug) fs.writeFileSync("./logs/syncError.json", error);
+			 //if (cfg.debug) fs.writeFileSync("logs/syncError.json", error);
 		 });
 };
 
 const deleteEvent = (data) => {
-	if (cfg.debug) console.log("deleting event " + data);
-	axios.post(cfg.deletingEndpoint + '?token=' + cfg.customToken, { event: data })
+	if (cfg.debug) console.log("deleting event ");
+	if (cfg.debug) console.log(data);
+	axios.post(cfg.deletingEndpoint + '?token=' + cfg.customToken, data )
 		 .then((res) => { if (cfg.debug) console.log("event deleted"); })
 		 .catch((error) => {
 			 console.error(error);
-			 //if (cfg.debug) fs.writeFileSync("./logs/deleteError.json", error);
+			 //if (cfg.debug) fs.writeFileSync("logs/deleteError.json", error);
 		 });
 };
 
@@ -86,27 +87,26 @@ const init = async () => {
 
 	client.login(cfg.discordToken);
 
-	client.on('messageUpdate', (oldMessage, newMessage) => {
-		// charlemagne always updates the event messages, therefore we only need to watch messageUpdate events for new and updated events
-		if (isEventMessage(newMessage)) return syncEvent(newMessage.embeds[0].fields);
-	});
 
-	// on deleting events charlemagne posts message "Successfully cancelled LFG Post: 1234 - activity name"
 	client.on('message', (newMessage) => {
-		// charlemagne always updates the event messages, therefore we only need to watch messageUpdate events for new and updated events
 		if (isConfigReloadMessage(newMessage)) return loadConfig();
 		else if (isEventMessage(newMessage)) return syncEvent(newMessage.embeds[0].fields);
-		else if (wasCancelled(newMessage)) return deleteEvent(newMessage.content.substr(cancelMessage.length));
+		//else if (wasCancelled(newMessage)) return deleteEvent(newMessage.content.substr(cancelMessage.length));
+	});
+
+	// charlemagne sometimes updates the event messages, therefore we only need to watch messageUpdate events for new and updated events
+	client.on('messageUpdate', (oldMessage, newMessage) => {
+		if (isEventMessage(newMessage)) return syncEvent(newMessage.embeds[0].fields);
 	});
 
 	// charlemagne events are cancelled when their associated chat message is deleted
 	client.on('messageDelete', (message) => {
-		if (isEventMessage(message)) return deleteEvent(message.content.substr(cancelMessage.length))
+		if (isEventMessage(message)) return deleteEvent(message.embeds[0].fields);
 	});
 
-	process.on('SIGTERM', () => client.destroy())
-	process.on('SIGINT', () => client.destroy())
-}
+	process.on('SIGTERM', () => client.destroy());
+	process.on('SIGINT', () => client.destroy());
+};
 
 init()
 	.catch(e => {

@@ -124,7 +124,7 @@
                 },
                 popupDetailBody: function (schedule)
                 {
-                    var html = '';
+                    var html = ''; //(schedule.body !== schedule.title ? '<div>'+schedule.body+'</div>' : '');
                     // alternative joins
                     if(typeof schedule.raw !== "undefined" && schedule.raw && typeof schedule.raw.alternatives !== "undefined" && schedule.raw.alternatives.length > 0) html += '<span class=""><i class="material-icons tiny">perm_identity</i> Alternatives: ' + schedule.raw.alternatives.join(', ') + '</span><br/>';
                     // join id
@@ -133,6 +133,7 @@
                     if (schedule.attendees.length > 5) html += '<span class="red-text"><i class="material-icons tiny">people</i> fireteam might be full</span>';
                     return html;
                 },
+                popupDetailLocation: function (schedule) { return schedule.body; }
             }
         });
 
