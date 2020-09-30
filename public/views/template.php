@@ -37,7 +37,7 @@
     		animation-name: spin;
   			animation-duration: 500ms;
   			animation-iteration-count: 1;
-  			animation-timing-function: linear; 
+  			animation-timing-function: linear;
     	}
     	@-moz-keyframes spin {
     	from { -moz-transform: rotate(0deg); }
@@ -90,68 +90,80 @@
 <script src="src/tui-calendar.js"></script>
 <script>
     var app = angular.module('app', []);
-    app.controller('ctrl', function ($scope, $http, $timeout)
-       {
-       		$scope.progress = 0;
-            $scope.calendar = new tui.Calendar('#calendar', {
-               isReadOnly: true,
-               defaultView: 'month',
-               taskView: false,
-               scheduleView: ['time'],
-               useDetailPopup: true,
-               month: {
-                   startDayOfWeek: 1,
-                   visibleWeeksCount: 3
-               },
+    app.controller('ctrl', function ($scope, $http, $timeout, $interval)
+    {
+        $scope.progress = 0;
+        $scope.calendar = new tui.Calendar('#calendar', {
+            isReadOnly: true,
+            defaultView: 'month',
+            taskView: false,
+            scheduleView: ['time'],
+            useDetailPopup: true,
+            month: {
+                startDayOfWeek: 1,
+                visibleWeeksCount: 3
+            },
+            template: {
+                time: function (schedule)
+                {
+                    console.log(schedule);
+                    return '<strong>' + moment(schedule.start.getTime()).format('HH:mm') + '</strong> ' + schedule.title;
+                },
+                monthGridHeader: function (dayModel)
+                {
+                    var date = parseInt(dayModel.date.split('-')[2], 10);
+                    var month = moment(dayModel.date).startOf("month").format('MMMM');
+                    var classNames = ['tui-full-calendar-weekday-grid-date '];
 
-               template: {
-                   time: function (schedule)
-                   {
-                       console.log(schedule);
-                       return '<strong>' + moment(schedule.start.getTime()).format('HH:mm') + '</strong> ' + schedule.title;
-                   },
-                   monthGridHeader: function (dayModel)
-                   {
-                       var date = parseInt(dayModel.date.split('-')[2], 10);
-                       var month = moment(dayModel.date).startOf("month").format('MMMM');
-                       var classNames = ['tui-full-calendar-weekday-grid-date '];
-
-                       if (dayModel.isToday)
-                       {
-                           classNames.push('green white-text');
-                       }
-
-                       return '<span class="' + classNames.join(' ') + '" style="width:auto;">&nbsp;' + date + ' ' + month + '&nbsp;</span>';
-                   },
-                   popupDetailBody: function(schedule) {
-                       return (schedule.attendees.length < 6 ? '<span class="green-text"><i class="material-icons tiny">person_add</i> !lfg join ' + schedule.id + '</span>' : '<span class="red-text"><i class="material-icons tiny">people</i> fireteam full</span>');
-                   },
-               }
-           });
-
-           $scope.loadEvents = function ()
-           {
-           	$scope.progress++;
-           	$timeout(function() { $scope.progress--;}, 500);
-               $http.get("<?php print $loadingEndpoint ?? ''; ?>")
-                    .then(function (res)
+                    if (dayModel.isToday)
                     {
-                    	//$.timeout(function(){ $scope.progress--;}, 500);
-                    	
-                        
-                        if (res.status == 200)
-                        {
-                            console.log("loaded events", res.data);
-                            $scope.calendar.clear();
-                            $scope.calendar.createSchedules(res.data, true);
-                            $scope.calendar.render();
-                        }
-                        else console.log("dat war nix", res);
-                        
-                    });
-           };
-           $scope.loadEvents();
-       });
+                        classNames.push('green white-text');
+                    }
+
+                    return '<span class="' + classNames.join(' ') + '" style="width:auto;">&nbsp;' + date + ' ' + month + '&nbsp;</span>';
+                },
+                popupDetailBody: function (schedule)
+                {
+                    var html = ''; //(schedule.body !== schedule.title ? '<div>'+schedule.body+'</div>' : '');
+                    // alternative joins
+                    if(typeof schedule.raw !== "undefined" && schedule.raw && typeof schedule.raw.alternatives !== "undefined" && schedule.raw.alternatives.length > 0) html += '<span class=""><i class="material-icons tiny">perm_identity</i> Alternatives: ' + schedule.raw.alternatives.join(', ') + '</span><br/>';
+                    // join id
+                    html += '<span class="green-text"><i class="material-icons tiny">person_add</i> !lfg join ' + schedule.id + '</span><br/>';
+                    // 6 people joined? might be full
+                    if (schedule.attendees.length > 5) html += '<span class="red-text"><i class="material-icons tiny">people</i> fireteam might be full</span>';
+                    return html;
+                },
+                popupDetailLocation: function (schedule) { return schedule.body; }
+            }
+        });
+
+        $scope.loadEvents = function ()
+        {
+            $scope.progress++;
+            $timeout(function () { $scope.progress--;}, 500);
+            $http.get("<?php print $loadingEndpoint ?? ''; ?>")
+                 .then(function (res)
+                 {
+                     //$.timeout(function(){ $scope.progress--;}, 500);
+
+
+                     if (res.status == 200)
+                     {
+                         console.log("loaded events", res.data);
+                         $scope.calendar.clear();
+                         $scope.calendar.createSchedules(res.data, true);
+                         $scope.calendar.render();
+                     }
+                     else console.log("dat war nix", res);
+
+                 });
+        };
+        $scope.loadEvents();
+
+        $scope.keepAlive = $interval(function() {
+            $scope.loadEvents();
+        }, 180000);
+    });
 </script>
 <?php } ?>
 </body>

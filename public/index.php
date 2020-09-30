@@ -2,6 +2,11 @@
 require '../vendor/autoload.php';
 session_start();
 
+ini_set('error_reporting',24567);
+//ini_set('display_errors',1);
+ini_set('log_errors',1);
+ini_set('error_log',dirname(__FILE__).'/../logs/error.log');
+
 // loading config.json
 $config = json_decode(file_get_contents(dirname(__FILE__)."/../_config.json"),false);
 Flight::set("config",$config);
@@ -44,8 +49,8 @@ Flight::route('/syncEvent', function() {
     if(Flight::get("config")->customToken !== Flight::request()->query['token']) die("no");
     
     $payload = Flight::request()->data->getData();
-    var_dump($payload);
-    
+    //var_dump($payload);
+
     //file_put_contents(dirname(__FILE__)."/../DB/payload.json", print_r($payload,true));
 
 	$activity = $payload[0]["value"];
@@ -56,8 +61,45 @@ Flight::route('/syncEvent', function() {
 	$id = $payload[2]["value"];
     $description = $payload[3]["value"];
     $guardians = explode(", ",$payload[4]["value"]);
-    if(count($payload) == 6) foreach ( explode(", ",$payload[5]["value"]) as $alt) $guardians[] = "(".$alt.")";
-        
+    if(count($payload) == 6) $alternatives = explode(", ",$payload[5]["value"]);
+
+    $activity2colorMap = [
+        // raids
+        'Crown of Sorrow' => '#6db4ff',
+        'Garden of Salvation' => '#6db4ff',
+        'Last Wish' => '#6db4ff',
+        'Leviathan' => '#6db4ff',
+        'Leviathan - Eater of Worlds' => '#6db4ff',
+        'Leviathan - Spire of Stars' => '#6db4ff',
+        'Scourge of the Past' => '#6db4ff',
+
+        // dungeons
+        'Pit of Heresy' => '#ffbb3b',
+        'Prophecy' => '#ffbb3b',
+        'Shattered Throne' => '#ffbb3b',
+
+        // strikes & co
+        'Nightfall' => '#ffbb3b',
+        'Strikes' => '#ffbb3b',
+
+        // crucible
+        'Quickplay' => '#ff5a5a',
+        'Competitive' => '#ff5a5a',
+        'Trials of Osiris' => '#ff5a5a',
+
+        // gambit
+        'Gambit Classic' => '#00f787',
+        'Gambit Prime' => '#00f787',
+
+        // seasonal
+        'Contact' => '#ffdd5a',
+        'Forge' => '#ffdd5a',
+        'Nightmare Hunts' => '#ffdd5a',
+        'Menagerie' => '#ffdd5a',
+        'The Reckoning' => '#ffdd5a',
+    ];
+    $bgColor = $activity2colorMap[$activity] ?? "transparent";
+
     $database = new \JamesMoss\Flywheel\Config(dirname(__FILE__) . '/../DB');
     $repo = new \JamesMoss\Flywheel\Repository('events', $database);
 
@@ -66,12 +108,14 @@ Flight::route('/syncEvent', function() {
         $post->id = $id;
         $post->calendardId = '1';
         $post->title = $activity;
+        $post->bgColor = $bgColor;
         $post->location = $activity;
         $post->body = $description;
         $post->start = $start;
         //$post->end = $end;
         $post->category = 'time';
         $post->attendees = $guardians;
+        $post->raw = ["alternatives" => $alternatives ?? []];
         $post->isReadOnly = true;
 
         $repo->update($post);
@@ -84,12 +128,14 @@ Flight::route('/syncEvent', function() {
         	'id' => $id,
             'calendardId' => '1',
             'title' => $activity,
+            'bgColor' => $bgColor,
             'location' => $activity,
             'body' => $description,
             'start' => $start,
             //'end' => $end,
             'category' => 'time',
             'attendees' => $guardians,
+            'raw' => [ 'alternatives' => $alternatives ?? []],
             'isReadOnly' => true
         ));
         $post->setId($id);
@@ -98,13 +144,18 @@ Flight::route('/syncEvent', function() {
 
         print "added";
     }
+
     Flight::stop();
 });
+
 Flight::route('/deleteEvent', function() {
     if(Flight::get("config")->customToken !== Flight::request()->query['token']) die("no");
-    
-	preg_match('/\d+/',Flight::request()->data->event,$matches);
-    $id = $matches[0];
+
+	//preg_match('/\d+/',Flight::request()->data->event,$matches);
+    //$id = $matches[0];
+
+    $payload = Flight::request()->data->getData();
+    $id = $payload[2]["value"];
 
     $database = new \JamesMoss\Flywheel\Config(dirname(__FILE__) . '/../DB');
     $repo = new \JamesMoss\Flywheel\Repository('events', $database);

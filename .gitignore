@@ -1,5 +1,6 @@
 DB/*
 logs/*
+!logs/.gitkeep
 node_modules
 vendor
 _config.json
