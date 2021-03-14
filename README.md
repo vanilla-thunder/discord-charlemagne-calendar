@@ -43,12 +43,12 @@ Event data will be processed there and saved as json file in `DB/events` directo
 The web Interface picks all json Files and displays them in calendar view. 
 
 # GDPR and Shit
-web interface uses php session for authentication, it places one mandatory cookie.
-There are no trackings or other cookies.
+Web interface uses php session for authentication, it places one mandatory cookie.
+Also, the 3rd party calendar script "ToastUI-Calendar" uses Google Analytics, you can find more details [here](https://github.com/nhn/tui.calendar#collect-statistics-on-the-use-of-open-source).
 
 # Used 3rd Party Software
 + discord.js for discord bot
 + axios for transmitting event data to web interface
 + flightphp for web interface backend
 + jamesmoss/flywheel for storing events as json files
-+ angularjs, materializecss and fullcalendar.io for web interface frontend
++ angularjs, materializecss and ToastUI Calendar for web interface frontend
